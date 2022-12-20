@@ -8,13 +8,15 @@
 %  harmonics and subharmonics of the residual excitation signal in order to
 %  determine both voicing decision and F0 estimates. It is shown in [1] to
 %  be particularly interesting in adverse conditions (low SNRs with various
-%  types of additive noises).
-%
+%  types of additive noises).  Further, the summation of residual harmonics (SRH) method used an auto-regressive linear
+% predictive coding (LPC) filter to achieve the function of pre-whitening and the removal of
+% vocal tract effects. （A Robust and Low Computational Cost Pitch Estimation Method）
+% SRH 也是一种harmonic summation (HS)方法，也比较出名。核心是用了一个auto-regressive LPC滤波器，
 %
 % Inputs
 %  wave            : [samples] [Nx1] input signal (speech signal)
 %  fs              : [Hz]      [1x1] sampling frequency
-%  f0min           : [Hz]      [1x1] minimum possible F0 value
+%  f0min           : [Hz]      [1x1] minimum possible F0 value 
 %  f0max           : [Hz]      [1x1] maximum possible F0 value
 %  hopsize         : [ms]      [1x1] time interval between two consecutive
 %                    frames (i.e. defines the rate of feature extraction).
@@ -58,7 +60,7 @@
 %
 % Modified
 %  John Kane kanejo@tcd.ie September 27th 2014 - Bug fix and efficiency
-
+% 
 
 function [F0s,VUVDecisions,SRHVal,time] = pitch_srh(wave,fs,f0min,f0max,hopsize)
 
@@ -85,13 +87,13 @@ if nargin < 5
 end
 
 %% Setings
-nHarmonics = 5;
+nHarmonics = 5;  
 SRHiterThresh = 0.1;
 SRHstdThresh = 0.05;
 VoicingThresh = 0.07;
 VoicingThresh2 = 0.085;
-LPCorder=round(3/4*fs/1000);
-Niter=2;
+LPCorder=round(3/4*fs/1000); % 这里在求LPC的阶数： https://support.ircam.fr/docs/AudioSculpt/3.0/co/LPC.html
+Niter=2;    
 
 %% Compute LP residual
 [res] = lpcresidual(wave,round(25/1000*fs),round(5/1000*fs), ...
@@ -192,7 +194,7 @@ subtrIdx = round( repmat( (1:nHarmonics-1)'+.5,1,fLen) .* ...
 plusIdx = mod(plusIdx-1,size(specMat,1))+1;
 subtrIdx = mod(subtrIdx-1,size(specMat,1))+1;
 
-% Do harmonic summation
+% Do harmonic summation,
 for n=1:N
     specMatCur = specMat(:,n);
     SRHmat(fSeq,n) = ( sum( specMatCur(plusIdx), 1 ) - ...
