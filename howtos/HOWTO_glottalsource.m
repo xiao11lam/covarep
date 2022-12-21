@@ -54,9 +54,13 @@ catch
 end
 warning on
 
-% GCI estimation
+% GCI estimation  （Glottal Closure Instant）一般是第一步 GCIs refer to the moments of most significant excitation that occur at the level of the vocal folds during each glottal.
+% 这里GCI主要可以用来分析glottal信号，并且说creaky声音有一些glottal的cue可以识别，所以借由glottal声音的分析我们能够较为容易地识别creaky声音。
+% 有两种GCI信号一种叫DEGG就是electroglottographic signal信号，还有一种是LP-residual信号。DEGG是EGG的导数通过laryngograph仪器。
+period (Smits and Yegnanarayana, 1995)
 sd_gci = gci_sedreams(x,fs,median(srh_f0),1);        % SEDREAMS
-se_gci = se_vq(x,fs,median(srh_f0),creak);           % SE-VQ
+% SE-VQ 在这里是一个升级版的来优化现在的GCI传统算法，
+se_gci = se_vq(x,fs,median(srh_f0),creak);           % SE-VQ （SEDREAMS algorithm (SE) modified to better handle voice qualities (-VQ) ）
 
 %res = lpcresidual(x,25/1000*fs,5/1000*fs,fs/1000+2); % LP residual
 res = maxlpresidual(x,fs,round(fs/1000)+2);
