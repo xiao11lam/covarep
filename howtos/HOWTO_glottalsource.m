@@ -94,6 +94,7 @@ fig(1) = subplot(311);
     plot(t,x, 'b');
     hold on
     plot(srh_time, srh_vuv, 'g');
+    % 这里展示了两种不同的gci算法。对比本文的se_gci。
     stem(sd_gci,ones(1,length(sd_gci))*-.1,'m');
     stem(se_gci,ones(1,length(se_gci))*-.1,'r');
     legend('Speech signal','Voicing (SRH)', 'GCI (SEDREAMS)','GCI (SE-VQ)');
@@ -107,6 +108,7 @@ fig(2) = subplot(312);
     ylabel('Hz');
     
 fig(3) = subplot(313);
+    % 这里是那个频段的f0追踪
     plot(srh_time, max_voiced_freq, 'g');
     legend('Maximum voiced frequency');
     xlabel('Time [s]');
@@ -122,6 +124,7 @@ fig(4) = subplot(311);
     plot(ps(:,1), ps(:,2),'--b');
     plot(m(:,1),m(:,2),'m');
     plot(rds(:,1), rds(:,2), 'r');
+    %  Maxima Dispersion Quotient 可以用来区分breathy 气声类似叹气 to tense声音者紧张的声音。MDQ用到了SE-VQ算法来先得到GCIs。
     legend('Speech signal','PeakSlope','MDQ','Rd');
     xlabel('Time [s]');
 
